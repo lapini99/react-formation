@@ -1,9 +1,9 @@
 "use client";
+import { useAppSelector } from '@/lib/hooks';
 import React from 'react'
-import { useSelector } from 'react-redux'
 
 export default function SelectedPokemon() {
-    const pokemon = useSelector((state) => state.pokemon);
+    const pokemon = useAppSelector((state) => state.pokemon);
     console.log(pokemon);
     return (
         <div className="flex items-center justify-center h-screen bg-gray-100 text-xl font-bold text-blue-600">

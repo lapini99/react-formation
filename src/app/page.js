@@ -4,11 +4,11 @@ import { useState } from "react";
 
 import { getPokemon } from "@/api/requests/pokeRequests";
 import { setPokemonName, setPokemonWeight } from '@/lib/features/pokemonSlice';
-import { useDispatch } from "react-redux";
 import Link from "next/link";
+import { useAppDispatch } from "@/lib/hooks";
 
 export default function Home() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [name, setName] = useState();
 
   const handleSubmit = (e) => {
