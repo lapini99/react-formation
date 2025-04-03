@@ -1,57 +1,71 @@
+"use client";
 import Image from "next/image";
+import { useState } from "react";
+
+import { getPokemon } from "@/api/requests/pokeRequests";
+import { setPokemonName, setPokemonWeight } from '@/lib/features/pokemonSlice';
+import { useDispatch } from "react-redux";
+import Link from "next/link";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const dispatch = useDispatch();
+  const [name, setName] = useState();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    getPokemon(name).then(
+      (response) => {
+        if (response) {
+          dispatch(setPokemonName(response.data.name));
+          dispatch(setPokemonWeight(response.data.weight));
+          console.log(response)
+        } else {
+          console.log("Error: ", response)
+        }
+      }
+    )
+  }
+
+  return (
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-sans bg-gray-50 text-gray-800">
+      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+        <form
+          action=""
+          method="get"
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4 bg-white p-6 rounded-lg shadow-md w-full max-w-md"
+        >
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="pokemonName"
+              className="text-sm font-medium text-gray-700"
+            >
+              Name
+            </label>
+            <input
+              type="text"
+              className="form-control border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              id="pokemonName"
+              onChange={(e) => setName((e.target.value).toLowerCase())}
+              placeholder="Enter Pokémon name"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
           >
-            Read our docs
-          </a>
-        </div>
+            Enviar
+          </button>
+          <Link
+            href="/selected-pokemon"
+            className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-200"
+          >
+            Check Pokémon stats
+          </Link>
+        </form>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center text-sm text-gray-600">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
